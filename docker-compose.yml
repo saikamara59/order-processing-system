@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"     # For services (AMQP)
+      - "15672:15672"   # RabbitMQ management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  order-service:
+    build: ./order-service
+    container_name: order-service
+    ports:
+      - "3000:3000"
+    depends_on:
+      - rabbitmq
+
+  inventory-service:
+    build: ./inventory-service
+    container_name: inventory-service
+    depends_on:
+      - rabbitmq
+
+  billing-service:
+    build: ./billing-service
+    container_name: billing-service
+    depends_on:
+      - rabbitmq
