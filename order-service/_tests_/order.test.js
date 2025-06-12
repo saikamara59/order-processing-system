@@ -8,10 +8,8 @@ beforeAll(() => {
   app = express();
   app.use(express.json());
 
-  // Mock channel
   channelMock = { sendToQueue: jest.fn() };
 
-  // Inject mock channel into route
   app.post('/order', (req, res) => {
     const order = { userId: req.body.userId, items: req.body.items };
     channelMock.sendToQueue('order_queue', Buffer.from(JSON.stringify(order)));
